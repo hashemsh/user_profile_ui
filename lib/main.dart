@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
   _SkillType _skill = _SkillType.photoShop;
   void updateSelectedSkill(_SkillType skillType) {
     setState(() {
-      this._skill = skillType;
+      _skill = skillType;
     });
   }
 
