@@ -13,22 +13,23 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+ThemeMode themeMode = ThemeMode.dark;
+
 class _MyAppState extends State<MyApp> {
-  ThemeMode _themeMode = ThemeMode.dark;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: _themeMode == ThemeMode.dark
+      theme: themeMode == ThemeMode.dark
           ? MyAppThemeConfig.dark().getTheme()
           : MyAppThemeConfig.light().getTheme(),
       home: MyHomePage(toggleThemeMode: () {
         setState(() {
-          if (_themeMode == ThemeMode.dark) {
-            _themeMode = ThemeMode.light;
+          if (themeMode == ThemeMode.dark) {
+            themeMode = ThemeMode.light;
           } else {
-            _themeMode = ThemeMode.dark;
+            themeMode = ThemeMode.dark;
           }
         });
       }),
@@ -126,9 +127,11 @@ class _MyHomePageState extends State<MyHomePage> {
             const Icon(CupertinoIcons.bubble_left),
             InkWell(
               onTap: widget.toggleThemeMode,
-              child: const Padding(
-                padding: EdgeInsets.fromLTRB(8, 0, 16, 0),
-                child: Icon(CupertinoIcons.sun_min),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 16, 0),
+                child: Icon(themeMode == ThemeMode.dark
+                    ? CupertinoIcons.sun_min
+                    : CupertinoIcons.moon),
               ),
             )
           ],
