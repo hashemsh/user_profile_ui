@@ -6,58 +6,108 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _themeMode = ThemeMode.dark;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    Color surfaceColor = const Color(0x0dffffff);
-    Color primaryColor = Colors.pink.shade400;
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        primarySwatch: Colors.pink,
-        primaryColor: primaryColor,
-        brightness: Brightness.dark,
-        dividerColor: surfaceColor,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(primaryColor))),
-        dividerTheme: const DividerThemeData(indent: 30, endIndent: 30),
-        scaffoldBackgroundColor: const Color.fromARGB(255, 30, 30, 30),
-        appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          fillColor: surfaceColor,
+      theme: _themeMode == ThemeMode.dark
+          ? MyAppThemeConfig.dark().getTheme()
+          : MyAppThemeConfig.light().getTheme(),
+      home: MyHomePage(toggleThemeMode: () {
+        setState(() {
+          if (_themeMode == ThemeMode.dark) {
+            _themeMode = ThemeMode.light;
+          } else {
+            _themeMode = ThemeMode.dark;
+          }
+        });
+      }),
+    );
+  }
+}
+
+class MyAppThemeConfig {
+  final Color primaryColor = Colors.pink.shade400;
+  final Color primaryTextColor;
+  final Color secondaryTextColor;
+  final Color surfaceColor;
+  final Color backgroundColor;
+  final Color appBarColor;
+  final Brightness brightness;
+
+  MyAppThemeConfig.dark()
+      : primaryTextColor = Colors.white,
+        secondaryTextColor = Colors.white70,
+        surfaceColor = const Color(0x0dffffff),
+        backgroundColor = const Color.fromARGB(255, 30, 30, 30),
+        appBarColor = Colors.black,
+        brightness = Brightness.dark;
+
+  MyAppThemeConfig.light()
+      : primaryTextColor = Colors.grey.shade900,
+        secondaryTextColor = Colors.grey.shade900.withOpacity(0.8),
+        surfaceColor = const Color(0x0d000000),
+        backgroundColor = Colors.white,
+        appBarColor = const Color.fromARGB(255, 235, 235, 235),
+        brightness = Brightness.light;
+
+  ThemeData getTheme() {
+    return ThemeData(
+      // This is the theme of your application.
+      primarySwatch: Colors.pink,
+      primaryColor: primaryColor,
+      brightness: brightness,
+      dividerColor: surfaceColor,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(primaryColor))),
+      dividerTheme: const DividerThemeData(indent: 30, endIndent: 30),
+      scaffoldBackgroundColor: backgroundColor,
+      appBarTheme: AppBarTheme(
+          elevation: 0,
+          backgroundColor: appBarColor,
+          foregroundColor: primaryTextColor),
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
         ),
-        textTheme: GoogleFonts.latoTextTheme(
-          const TextTheme(
-              bodyText2: TextStyle(fontSize: 15),
-              bodyText1: TextStyle(
-                  fontSize: 13, color: Color.fromARGB(200, 255, 255, 255)),
-              headline6: TextStyle(fontWeight: FontWeight.bold),
-              subtitle1: TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
-        ),
+        filled: true,
+        fillColor: surfaceColor,
       ),
-      home: const MyHomePage(),
+      textTheme: GoogleFonts.latoTextTheme(
+        TextTheme(
+            bodyText2: TextStyle(fontSize: 15, color: primaryTextColor),
+            bodyText1: TextStyle(fontSize: 13, color: secondaryTextColor),
+            headline6:
+                TextStyle(fontWeight: FontWeight.bold, color: primaryTextColor),
+            subtitle1: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+                color: primaryTextColor)),
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  final Function() toggleThemeMode;
+
+  const MyHomePage({Key? key, required this.toggleThemeMode}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
-enum _SkillType { photoShop, xd, illustrator, afterEffect, lighRoom }
 
 class _MyHomePageState extends State<MyHomePage> {
   _SkillType _skill = _SkillType.photoShop;
@@ -72,11 +122,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Curriculum Vitae'),
-          actions: const [
-            Icon(CupertinoIcons.bubble_left),
-            Padding(
-              padding: EdgeInsets.fromLTRB(8, 0, 16, 0),
-              child: Icon(CupertinoIcons.sun_min),
+          actions: [
+            const Icon(CupertinoIcons.bubble_left),
+            InkWell(
+              onTap: widget.toggleThemeMode,
+              child: const Padding(
+                padding: EdgeInsets.fromLTRB(8, 0, 16, 0),
+                child: Icon(CupertinoIcons.sun_min),
+              ),
             )
           ],
         ),
@@ -170,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Center(
                 child: Wrap(
                   direction: Axis.horizontal,
@@ -334,3 +387,5 @@ class Skill extends StatelessWidget {
     );
   }
 }
+
+enum _SkillType { photoShop, xd, illustrator, afterEffect, lighRoom }
