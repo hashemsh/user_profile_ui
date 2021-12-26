@@ -128,11 +128,12 @@ class MyAppThemeConfig {
       bodyText2: TextStyle(
           fontSize: 14,
           color: primaryTextColor,
-          height: 2,
+          fontWeight: FontWeight.normal,
           fontFamily: faPrimaryFontFamily),
       bodyText1: TextStyle(
-          fontSize: 13,
-          height: 1.7,
+          fontSize: 12,
+          height: 1.5,
+          fontWeight: FontWeight.normal,
           color: secondaryTextColor,
           fontFamily: faPrimaryFontFamily),
       headline6: TextStyle(
@@ -144,7 +145,7 @@ class MyAppThemeConfig {
       button: const TextStyle(fontFamily: faPrimaryFontFamily),
       subtitle1: TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.bold,
           color: primaryTextColor,
           fontFamily: faPrimaryFontFamily));
 } //MyAppThemeConfig
